@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import RepositoryItem from './RepositoryItem';
+import { getRepositories } from '../utils/api';
 
 class RepositoriesList extends React.Component {
   constructor(props) {
@@ -9,6 +10,28 @@ class RepositoriesList extends React.Component {
     this.state = {
       repositories: null
     };
+  }
+
+  async componentDidMount() {
+    const repositories = await getRepositories(this.props.language);
+
+    this.setState(() => {
+      return {
+        repositories
+      };
+    });
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (prevProps.language !== this.props.language) {
+      const repositories = await getRepositories(this.props.language);
+
+      this.setState(() => {
+        return {
+          repositories
+        };
+      });
+    }
   }
 
   render() {
